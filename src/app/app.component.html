@@ -3,15 +3,16 @@
   <h1 class="text-center bg-danger p-3 text-white rounded">
     Welcome to your Prediction Pedia
   </h1>
-<div class="d-flex justify-content-between">
+<div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
   <button class="btn btn-success" (click)="single()">
-    want to know about yourself
+    Want to know about yourself
   </button>
 
   <button class="btn btn-success" (click)="partner()">
-    want to know about your relationship
+    Want to know about your relationship
   </button>
 </div>
+
 
   <div *ngIf="one" class="row justify-content-center mt-4">
     <div class="col-md-4">
