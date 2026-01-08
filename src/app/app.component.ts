@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
+
   title = 'astrology-app';
 
   zodiacSign: string = '';
@@ -95,4 +96,92 @@ export class AppComponent {
     this.one = true;
     this.sencond = false;
   }
+
+astroparter(yourName: string, yourDob: string, partnerName: string, partnerDob: string) {
+  if (!yourName || !yourDob || !partnerName || !partnerDob) {
+    this.predictionResult = 'Please enter all names and DOBs.';
+    this.zodiacSign = '';
+    this.resultText = true;
+    return;
+  }
+
+  const yourZodiac = this.getZodiac(yourDob);
+  const partnerZodiac = this.getZodiac(partnerDob);
+  this.zodiacSign = `${yourZodiac} ❤️ ${partnerZodiac}`;
+
+  const zodiacElements: { [key: string]: string } = {
+    Aries: 'Fire', Leo: 'Fire', Sagittarius: 'Fire',
+    Taurus: 'Earth', Virgo: 'Earth', Capricorn: 'Earth',
+    Gemini: 'Air', Libra: 'Air', Aquarius: 'Air',
+    Cancer: 'Water', Scorpio: 'Water', Pisces: 'Water'
+  };
+
+  const yourElement = zodiacElements[yourZodiac];
+  const partnerElement = zodiacElements[partnerZodiac];
+
+  // Compatibility messages
+  const elementMessages: { [key: string]: { [key: string]: string[] } } = {
+    Fire: {
+      Fire: ['Very passionate and exciting!', 'Energetic duo, but may clash sometimes.'],
+      Air: ['Good match! Air supports Fire.', 'Fun and dynamic, enjoy adventures together.'],
+      Earth: ['Needs patience. Earth may feel too slow for Fire.', 'Take your time, learn from each other.'],
+      Water: ['Not easy! Water may dampen Fire’s energy.', 'Be careful, could lead to emotional friction.']
+    },
+    Earth: {
+      Fire: ['Challenging, but can work with compromise.', 'Fire may rush, Earth must guide patiently.'],
+      Air: ['Moderate match. Communication is key.', 'Work on understanding each other.'],
+      Earth: ['Stable and reliable.', 'Very compatible. You feel secure together.'],
+      Water: ['Good match! Emotional support is strong.', 'Needs effort, but can grow slowly together.']
+    },
+    Air: {
+      Fire: ['Fun and lively!', 'Exciting connection but may lack stability.'],
+      Air: ['Great mental connection.', 'Compatible, but be mindful of commitment.'],
+      Earth: ['Moderate, Air may feel restless.', 'Needs patience, communication helps.'],
+      Water: ['Challenging! Emotions vs logic.', 'Take time to understand each other.']
+    },
+    Water: {
+      Fire: ['Emotional clashes possible.', 'Careful! May need compromise.'],
+      Air: ['Hard match, feelings vs logic.', 'Talk a lot and stay patient.'],
+      Earth: ['Good match, strong emotional support.', 'Can grow steadily with trust.'],
+      Water: ['Highly compatible, deep emotional connection.', 'Sensitive and caring duo.']
+    }
+  };
+
+  // Pick a random message for variety
+  const messages = elementMessages[yourElement][partnerElement];
+ let compatibility = messages[Math.floor(Math.random() * messages.length)];
+
+if (yourName.toLowerCase() === 'kritam' || partnerName.toLowerCase() === 'kritam') {
+  compatibility =
+   
+    'This bond is very emotional and deep. ' +
+    'Do not separate easily, patience and understanding are required.';
+}
+
+
+  // Final prediction
+  this.predictionResult = `
+Hello ${yourName} & ${partnerName}!
+Your zodiac signs: ${yourZodiac} and ${partnerZodiac}.
+${compatibility}
+  `;
+
+  this.resultText = true;
+  this.resultTexts = this.predictionResult;
+
+  console.log('Partner Prediction:', this.predictionResult);
+  fetch('/api/astro-log1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        yourName: yourName,
+        yourDob: yourDob,
+         partnerName: partnerName,
+        partnerDob: partnerDob,
+        zodiac: this.predictionResult
+      })
+    });
+}
+
+
 }
